@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `ReadVarInt` trait in crate `varmint`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, ReadVarInt">
+
+    <title>varmint::ReadVarInt - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>varmint</a></p><script>window.sidebarCurrent = {name: 'ReadVarInt', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content trait">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>varmint</a>::<wbr><a class='trait' href=''>ReadVarInt</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a class='srclink' href='../src/varmint/read.rs.html#11-117' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait ReadVarInt {
+    fn <a href='#tymethod.read_u64_varint' class='fnname'>read_u64_varint</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt;;
+    fn <a href='#tymethod.read_usize_varint' class='fnname'>read_usize_varint</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;;
+    fn <a href='#tymethod.try_read_u64_varint' class='fnname'>try_read_u64_varint</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt;&gt;;
+    fn <a href='#tymethod.try_read_usize_varint' class='fnname'>try_read_usize_varint</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;&gt;;
+}</pre><div class='docblock'><p>A trait to allow reading integers from a byte-oriented source that were
+encoded in the varint format defined by Google&#39;s Protocol Buffer standard.</p>
+</div>
+            <h2 id='required-methods'>Required Methods</h2>
+            <div class='methods'>
+        <h3 id='tymethod.read_u64_varint' class='method stab '><span id='read_u64_varint.v' class='invisible'><code>fn <a href='#tymethod.read_u64_varint' class='fnname'>read_u64_varint</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt;</code></span></h3><div class='docblock'><p>Read a varint from this object that will fit into a <code>u64</code>.</p>
+
+<h1 id='errors' class='section-header'><a href='#errors'>Errors</a></h1>
+<p>If there is an error returned by the underlying source then that will
+be propagated up, in that case the number of bytes that will have been
+read from it is undefined.</p>
+
+<p>If the varint read exceeds the space available in a <code>u64</code> an error will
+be returned and the number of bytes read from the underlying source is
+undefined.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>varmint</span>::<span class='ident'>ReadVarInt</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='number'>0xB5</span>, <span class='number'>0xFF</span>, <span class='number'>0xAC</span>, <span class='number'>0x02</span>];
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>bytes</span>.<span class='ident'>read_u64_varint</span>().<span class='ident'>unwrap</span>(), <span class='number'>0x4B3FB5</span>);</pre>
+</div><h3 id='tymethod.read_usize_varint' class='method stab '><span id='read_usize_varint.v' class='invisible'><code>fn <a href='#tymethod.read_usize_varint' class='fnname'>read_usize_varint</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;</code></span></h3><div class='docblock'><p>Read a varint from this object that will fit into a <code>usize</code>.</p>
+
+<h1 id='errors-1' class='section-header'><a href='#errors-1'>Errors</a></h1>
+<p>If there is an error returned by the underlying source then that will
+be propagated up, in that case the number of bytes that will have been
+read from it is undefined.</p>
+
+<p>If the varint read exceeds the space available in a <code>usize</code> an error
+will be returned and the number of bytes read from the underlying
+source is undefined.</p>
+
+<h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>varmint</span>::<span class='ident'>ReadVarInt</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='number'>0xB5</span>, <span class='number'>0xFF</span>, <span class='number'>0xAC</span>, <span class='number'>0x02</span>];
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>bytes</span>.<span class='ident'>read_usize_varint</span>().<span class='ident'>unwrap</span>(), <span class='number'>0x4B3FB5</span>);</pre>
+</div><h3 id='tymethod.try_read_u64_varint' class='method stab '><span id='try_read_u64_varint.v' class='invisible'><code>fn <a href='#tymethod.try_read_u64_varint' class='fnname'>try_read_u64_varint</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt;&gt;</code></span></h3><div class='docblock'><p>Attempt to read a varint from this object that will fit into a <code>u64</code>.</p>
+
+<p>If this object has no more data available then this will return
+<code>Ok(None)</code>, if however there is a valid prefix for a varint read then
+this object runs out of data before completing it that will be
+propagated as a normal error.</p>
+
+<h1 id='errors-2' class='section-header'><a href='#errors-2'>Errors</a></h1>
+<p>If there is an error returned by the underlying source then that will
+be propagated up, in that case the number of bytes that will have been
+read from it is undefined.</p>
+
+<p>If the varint read exceeds the space available in a <code>u64</code> an error will
+be returned and the number of bytes read from the underlying source is
+undefined.</p>
+
+<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>varmint</span>::<span class='ident'>ReadVarInt</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='number'>0xB5</span>, <span class='number'>0xFF</span>, <span class='number'>0xAC</span>, <span class='number'>0x02</span>];
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>bytes</span>.<span class='ident'>try_read_u64_varint</span>().<span class='ident'>unwrap</span>(), <span class='prelude-val'>Some</span>(<span class='number'>0x4B3FB5</span>));</pre>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>varmint</span>::<span class='ident'>ReadVarInt</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[];
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>bytes</span>.<span class='ident'>try_read_u64_varint</span>().<span class='ident'>unwrap</span>(), <span class='prelude-val'>None</span>);</pre>
+</div><h3 id='tymethod.try_read_usize_varint' class='method stab '><span id='try_read_usize_varint.v' class='invisible'><code>fn <a href='#tymethod.try_read_usize_varint' class='fnname'>try_read_usize_varint</a>(&amp;mut self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>&gt;&gt;</code></span></h3><div class='docblock'><p>Attempt to read a varint from this object that will fit into a <code>usize</code>.</p>
+
+<p>If this object has no more data available then this will return
+<code>Ok(None)</code>, if however there is a valid prefix for a varint read then
+this object runs out of data before completing it that will be
+propagated as a normal error.</p>
+
+<h1 id='errors-3' class='section-header'><a href='#errors-3'>Errors</a></h1>
+<p>If there is an error returned by the underlying source then that will
+be propagated up, in that case the number of bytes that will have been
+read from it is undefined.</p>
+
+<p>If the varint read exceeds the space available in a <code>usize</code> an error
+will be returned and the number of bytes read from the underlying
+source is undefined.</p>
+
+<h1 id='examples-3' class='section-header'><a href='#examples-3'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>varmint</span>::<span class='ident'>ReadVarInt</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='number'>0xB5</span>, <span class='number'>0xFF</span>, <span class='number'>0xAC</span>, <span class='number'>0x02</span>];
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>bytes</span>.<span class='ident'>try_read_usize_varint</span>().<span class='ident'>unwrap</span>(), <span class='prelude-val'>Some</span>(<span class='number'>0x4B3FB5</span>));</pre>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>varmint</span>::<span class='ident'>ReadVarInt</span>;
+<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>] <span class='op'>=</span> <span class='kw-2'>&amp;</span>[];
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>bytes</span>.<span class='ident'>try_read_usize_varint</span>().<span class='ident'>unwrap</span>(), <span class='prelude-val'>None</span>);</pre>
+</div></div>
+        <h2 id='implementors'>Implementors</h2>
+        <ul class='item-list' id='implementors-list'>
+    <li><code>impl&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html' title='std::io::Read'>Read</a>&gt; ReadVarInt for R</code></li>
+</ul><script type="text/javascript" async
+                         src="../implementors/varmint/trait.ReadVarInt.js">
+                 </script></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "varmint";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
